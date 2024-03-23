@@ -1,11 +1,14 @@
 package com.example.demojpag6;
 
+import com.example.demojpag6.Entity.Patient;
 import com.example.demojpag6.Entity.Produit;
 import com.example.demojpag6.Repositery.ProductRepositery;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 
 import java.util.ArrayList;
 import java.util.Optional;
@@ -34,6 +37,10 @@ public class DemojpaG6Application implements CommandLineRunner {
             System.out.println(p);
         });
 
+        //pagination
+        Page<Produit> produitPage=productRepositery.findAll(PageRequest.of(0,5));
+        System.out.println(produitPage.getTotalPages());
+
         //Consulter un produit
 
         Optional<Produit> produitWithIdOne=productRepositery.findById(1L);
@@ -48,7 +55,7 @@ public class DemojpaG6Application implements CommandLineRunner {
 
         //Mettre à jour un produit
         System.out.println("-----Mettre à jour un produit----");
-        Produit produitToUpdate=productRepositery.findById(2L).get();
+        Produit produitToUpdate=productRepositery.findById(2L).orElse(null);
         produitToUpdate.setPrice(80);
         productRepositery.save(produitToUpdate);
         System.out.println(productRepositery.findAll().stream().filter(p->p.getId()==2L).findFirst());
